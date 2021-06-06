@@ -1,4 +1,4 @@
-package com.sundogsoftware.spark
+package com.dataengineering.spark
 
 import org.apache.log4j._
 import org.apache.spark.sql._
@@ -6,9 +6,9 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.{IntegerType, LongType, StructType}
 
 /** Find the movies with the most ratings. */
-object PopularMoviesDataset {
+object FamousMoviesDataset {
 
-  // Case class so we can get a column name for our movie ID
+  // Case class to get a column name for our movie ID
   final case class Movie(movieID: Int)
 
   /** Our main function where the action happens */
@@ -20,7 +20,7 @@ object PopularMoviesDataset {
     // Use new SparkSession interface in Spark 2.0
     val spark = SparkSession
       .builder
-      .appName("PopularMovies")
+      .appName("FamousMovies")
       .master("local[*]")
       .getOrCreate()
 
@@ -40,11 +40,11 @@ object PopularMoviesDataset {
       .csv("data/ml-100k/u.data")
       .as[Movie]
     
-    // Some SQL-style magic to sort all movies by popularity in one line!
-    val topMovieIDs = moviesDS.groupBy("movieID").count().orderBy(desc("count"))
+    // to sort
+    val topMovies = moviesDS.groupBy("movieID").count().orderBy(desc("count"))
 
     // Grab the top 10
-    topMovieIDs.show(10)
+    topMovies.show(10)
 
     // Stop the session
     spark.stop()
